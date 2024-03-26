@@ -27,18 +27,22 @@ Create Suricata IDS/IPS rules (signatures) to detect below suspicious activities
 
 <p align="center">
 Once the Suricata service is installed in our VM, some configurations must be made for it to work. The configuration file path can be found in the screenshot. First, I changed the #HOME_NET IP address range to listen to my real home IP range which is 192.168.200.0/24  <br/>
+  
 <img src="https://imgur.com/uO7oTYY.png" height="80%" width="80%" alt="Suricata Steps"/>
 <br />
 <br />
 Secondly, I enabled the community-id to be “true”:  <br/>
+  
 <img src="https://imgur.com/L9DNmSg.png" height="80%" width="80%" alt="Suricata Steps"/>
 <br />
 <br />
 Made sure the af-packet is linked with our network interface. Mine is eth0.: <br/>
+  
 <img src="https://imgur.com/qvywVM6.png" height="80%" width="80%" alt="Suricata Steps"/>
 <br />
 <br />
 Last, I changed to default-rule-path to /var/lib/suricata/rules as the final configuration:  <br/>
+  
 <img src="https://imgur.com/jMFGrGA.png" height="80%" width="80%" alt="Suricata Steps"/>
 <br />
 <br />
@@ -48,6 +52,7 @@ Last, I changed to default-rule-path to /var/lib/suricata/rules as the final con
 
 <p align="left">
 Testing situation for TCP SYN Floods: <br/>
+  
 <img src="https://imgur.com/SnlC5Na.png" height="80%" width="80%" alt="Suricata Steps"/><br />
  
   Explanation:
@@ -67,6 +72,7 @@ Testing situation for TCP SYN Floods: <br/>
 
 
 Used two different VMs for this testing scenario with different IP addresses 
+
 <img src="https://imgur.com/ZVvYxN5.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 - On the testing VM, first we installed with ethtool package by typing: sudo apt-get install ethtool -y 
@@ -76,7 +82,8 @@ Used two different VMs for this testing scenario with different IP addresses
 <img src="https://imgur.com/bIAUXmZ.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 On the remote machine, we typed the following command to send non-stop packets to our main machine for Suricata detection:
-- Sudo hping3 -S -p 80 --flood --rand-source 192.168.200.128 
+- Sudo hping3 -S -p 80 --flood --rand-source 192.168.200.128
+
 <img src="https://imgur.com/s6FUdb7.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 
@@ -92,6 +99,7 @@ On the remote machine, we typed the following command to send non-stop packets t
 
 <p align="left">
 Testing situation for SQL Injection attack:  <br/>
+  
 <img src="https://imgur.com/NJLRSYw.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
   Explanation:
@@ -108,12 +116,15 @@ Testing situation for SQL Injection attack:  <br/>
 #Testing Steps:
 
 Damn Vulnerable Web Application (DVWA) is a PHP/MySQL web application that is to aid penetration testers and security professionals to test their skills and tools. To perform the testing, I needed to install DVWA in my testing Kali Linux machine but I will not go through the installation steps in this lab. Once I did, I typed 127.0.01 (my localhost IP address) in the browser for this main page.  
+
 <img src="https://imgur.com/9JGcpgW.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 Set it to a low level so I could let the Suricata detect more easily.
+
 <img src="https://imgur.com/O5ceT9u.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 Clicked the SQL Injection from the left side, then clicked submit
+
 <img src="https://imgur.com/YgbCBMn.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 #Results from fast.log:
@@ -129,6 +140,7 @@ Clicked the SQL Injection from the left side, then clicked submit
 
 <p align="left">
 Testing situation for Phishing attack:  <br/>
+  
 <img src="https://imgur.com/v52PAJ1.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
   Explanation:
@@ -147,6 +159,7 @@ Testing situation for Phishing attack:  <br/>
 #Testing steps and the result from fast.log: 
 
 I pinged the domain and there was a DNS query service running in behind, so it hit the rule and appeared in the log file. 
+
 <img src="https://imgur.com/NiLJCGy.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 <br />
@@ -157,6 +170,7 @@ I pinged the domain and there was a DNS query service running in behind, so it h
 
 <p align="left">
 Testing situation for this attack:  <br/>
+  
 <img src="https://imgur.com/dm9HnW1.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
   Explanation:
@@ -173,7 +187,9 @@ Testing situation for this attack:  <br/>
 #Testing steps: 
 
 To start off, there are two configurations I had to make.Ports.conf and 000-default.conf. I went to the directory where they belonged. 
+
 <img src="https://imgur.com/B78y4V3.png" height="80%" width="80%" alt="Suricata Steps"/><br />
+
 
 Type: sudo nano 000-default.conf. 
 
@@ -183,27 +199,33 @@ Then save and exit.
 
 <img src="https://imgur.com/71FhKeF.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
+
 After that, I went to the directory /etc/apache2 and I typed:
 - Sudo nano ports.conf
 
 The Apache port is configured to listen to Port 4848 which is 4800. Save and exit. All configurations are made.
+
 <img src="https://imgur.com/71FhKeF.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 Then I typed the following commands to restart my Apache server and check its status: 
 - Sudo systemctl restart apache2.service
 - Sudo systemctl status apache2.service
+
 <img src="https://imgur.com/rI1YVOC.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 In this testing, I used 2 different VMs here with different IPs as well. I will not go through the installation part of the Apache server here in this assignment. Once it was successfully installed, we can open it in another VM by typing another VM IP address in the browser and it would show the Apache2 Debian Default Page.
+
 <img src="https://imgur.com/26XEw08.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 Since I made the configuration, I typed the IP address via port 4848 again and it was fine that I could go to this main page again.
+
 <img src="https://imgur.com/Ki0rzy8.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 
 #Result from fast.log: 
 
 Since we are using Port 484, it hits the rule description of noting using Port 80 or 8080. We got our results.
+
 <img src="https://imgur.com/6VdecM7.png" height="80%" width="80%" alt="Suricata Steps"/><br />
 
 <br />
